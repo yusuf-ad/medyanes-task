@@ -1,40 +1,160 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Todo App - Medyanes Task
 
-## Getting Started
+Bu proje **Next.js**, **Tailwind CSS**, **Prisma**, **MongoDB** ve **Zustand** ile yapılmış tam özellikli bir Todo uygulamasıdır.
 
-First, run the development server:
+## 🚀 Teknolojiler
+
+- **Next.js 15** - React framework
+- **TypeScript** - Tip güvenliği
+- **Tailwind CSS** - Styling
+- **Prisma** - ORM
+- **MongoDB** - Database
+- **Zustand** - State management
+
+## 📋 Özellikler
+
+- ✅ Todo ekleme (title + description)
+- ✅ Todo düzenleme
+- ✅ Todo tamamlama/geri alma
+- ✅ Todo silme
+- ✅ Responsive tasarım
+- ✅ Modern UI/UX
+- ✅ Real-time güncellemeler
+
+## 🛠️ Kurulum
+
+### 1. Repository'yi klonlayın
+
+```bash
+git clone <repo-url>
+cd medyanes-task
+```
+
+### 2. Dependencies yükleyin
+
+```bash
+npm install
+```
+
+### 3. Environment variables ayarlayın
+
+`.env.local` dosyasını oluşturun ve MongoDB connection string'inizi ekleyin:
+
+```env
+DATABASE_URL="mongodb+srv://username:password@cluster.mongodb.net/todoapp?retryWrites=true&w=majority"
+NEXT_PUBLIC_API_URL="http://localhost:3000"
+```
+
+### 4. Prisma setup
+
+```bash
+npm run prisma:generate
+npm run prisma:push
+```
+
+### 5. Development server'ı başlatın
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Uygulama [http://localhost:3000](http://localhost:3000) adresinde çalışacaktır.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## 📁 Proje Yapısı
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+```
+medyanes-task/
+├── components/          # React komponentleri
+│   ├── TodoForm.tsx    # Todo ekleme formu
+│   ├── EditTodoForm.tsx # Todo düzenleme formu
+│   ├── TodoItem.tsx    # Tekil todo item
+│   ├── TodoList.tsx    # Todo listesi
+│   └── types.ts        # TypeScript tipleri
+├── pages/
+│   ├── api/
+│   │   └── todos/      # API endpoints
+│   └── index.tsx       # Ana sayfa
+├── services/
+│   ├── fetchAPI/       # HTTP client
+│   └── serviceOperations/ # Database işlemleri
+├── store/
+│   └── todoStore.ts    # Zustand store
+├── lib/
+│   └── prisma/         # Prisma client
+└── prisma/
+    └── schema.prisma   # Database schema
+```
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+## 🔧 Available Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `npm run dev` - Development server başlatır
+- `npm run build` - Production build oluşturur
+- `npm run start` - Production server başlatır
+- `npm run prisma:generate` - Prisma client oluşturur
+- `npm run prisma:push` - Database schema'yı push eder
+- `npm run prisma:studio` - Prisma Studio açar
 
-## Learn More
+## 🌐 API Endpoints
 
-To learn more about Next.js, take a look at the following resources:
+### GET /api/todos
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+Tüm todoları getirir.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### POST /api/todos
 
-## Deploy on Vercel
+Yeni todo oluşturur.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```json
+{
+  "title": "Todo title",
+  "content": "Todo description (optional)"
+}
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+### GET /api/todos/[id]
+
+Belirli bir todo getirir.
+
+### PUT /api/todos/[id]
+
+Todo günceller.
+
+```json
+{
+  "title": "Updated title",
+  "content": "Updated description",
+  "completed": true
+}
+```
+
+### DELETE /api/todos/[id]
+
+Todo siler.
+
+## 🎨 UI/UX Features
+
+- **Dark theme** - Modern koyu tema
+- **Gradient effects** - Güzel gradient efektleri
+- **Hover animations** - Interaktif hover efektleri
+- **Loading states** - Loading göstergeleri
+- **Error handling** - Hata yönetimi
+- **Responsive design** - Mobil uyumlu tasarım
+
+## 🔄 State Management Architecture
+
+```
+Component → Zustand Store → FetchAPI → API Routes → ServiceOperations → Prisma → MongoDB
+```
+
+## 📱 Kullanım
+
+1. **Todo Ekleme**: Ana sayfada title ve description girerek todo ekleyin
+2. **Todo Tamamlama**: Todo'ya tıklayarak tamamlandı olarak işaretleyin
+3. **Todo Düzenleme**: Edit butonuna tıklayarak todo'yu düzenleyin
+4. **Todo Silme**: Delete butonuna tıklayarak todo'yu silin
+
+## 🚧 Geliştirme Notları
+
+- MongoDB Atlas kullanmanız önerilir
+- `.env.local` dosyasını `.gitignore`'a eklemeyi unutmayın
+- Production'da environment variables'ları doğru set ettiğinizden emin olun

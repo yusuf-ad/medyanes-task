@@ -1,45 +1,57 @@
+import { useState } from "react";
 import { Todo } from "./types";
 
 interface EditTodoFormProps {
-  editingTodo: Todo;
-  editText: string;
-  setEditText: (value: string) => void;
-  onSaveEdit: () => void;
+  todo: Todo;
+  onUpdateTodo: (id: string, title: string, content?: string) => void;
   onCancelEdit: () => void;
 }
 
 export default function EditTodoForm({
-  editingTodo,
-  editText,
-  setEditText,
-  onSaveEdit,
+  todo,
+  onUpdateTodo,
   onCancelEdit,
 }: EditTodoFormProps) {
+  const [title, setTitle] = useState(todo.title);
+  const [content, setContent] = useState(todo.content || "");
+
+  const handleSave = () => {
+    if (title.trim() === "") return;
+    onUpdateTodo(todo.id, title, content || undefined);
+  };
+
   return (
-    <div className="mb-6 p-4 bg-blue-100 rounded-md">
-      <h2 className="text-blue-500 text-xl font-semibold mt-0 mb-4">
-        Edit Todo
-      </h2>
-      <input
-        type="text"
-        value={editText}
-        onChange={(e) => setEditText(e.target.value)}
-        className="w-full p-3 border border-blue-300 rounded-md bg-white text-blue-900 text-base mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        onKeyPress={(e) => e.key === "Enter" && onSaveEdit()}
-      />
-      <div className="flex justify-end gap-2">
-        <button
-          onClick={onSaveEdit}
-          className="px-4 py-2 bg-blue-500 text-white border-none rounded-md cursor-pointer text-sm hover:bg-blue-600 transition-colors"
-        >
-          Save
-        </button>
-        <button
-          onClick={onCancelEdit}
-          className="px-4 py-2 bg-blue-400 text-white border-none rounded-md cursor-pointer text-sm hover:bg-blue-500 transition-colors"
-        >
-          Cancel
-        </button>
+    <div className="space-y-4">
+      <h2 className="text-xl font-semibold text-purple-400 mb-4">Edit Todo</h2>
+      <div className="space-y-3">
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="w-full p-3 border border-slate-600 rounded-lg bg-slate-700/50 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent"
+          onKeyPress={(e) => e.key === "Enter" && !e.shiftKey && handleSave()}
+        />
+        <textarea
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          placeholder="Todo description (optional)"
+          rows={3}
+          className="w-full p-3 border border-slate-600 rounded-lg bg-slate-700/50 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent resize-none"
+        />
+        <div className="flex gap-3">
+          <button
+            onClick={handleSave}
+            className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg font-semibold hover:from-purple-600 hover:to-pink-700 transition-all duration-200"
+          >
+            Save Changes
+          </button>
+          <button
+            onClick={onCancelEdit}
+            className="flex-1 px-4 py-2 bg-slate-600 text-white rounded-lg font-semibold hover:bg-slate-700 transition-colors"
+          >
+            Cancel
+          </button>
+        </div>
       </div>
     </div>
   );

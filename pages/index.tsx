@@ -1,105 +1,125 @@
 import Head from "next/head";
-import { useState } from "react";
-import TodoForm from "../components/TodoForm";
-import TodoList from "../components/TodoList";
-import EditTodoForm from "../components/EditTodoForm";
-import { Todo } from "../components/types";
+import { useEffect, useState } from "react";
+import TodoList from "@/components/TodoList";
+import TodoForm from "@/components/TodoForm";
+import EditTodoForm from "@/components/EditTodoForm";
+import { Todo } from "@/components/types";
+import { useTodoStore } from "@/store/todoStore";
 
 export default function Home() {
-  const [todos, setTodos] = useState<Todo[]>([]);
-  const [newTodo, setNewTodo] = useState("");
   const [editingTodo, setEditingTodo] = useState<Todo | null>(null);
-  const [editText, setEditText] = useState("");
 
-  const addTodo = () => {
-    if (newTodo.trim() === "") return;
-    setTodos([
-      ...todos,
-      {
-        id: Date.now(),
-        text: newTodo,
-        completed: false,
-        createdAt: new Date().toISOString(),
-      },
-    ]);
-    setNewTodo("");
+  const {
+    todos,
+    isLoading,
+    error,
+    fetchTodos,
+    addTodo,
+    toggleTodo,
+    updateTodo,
+    deleteTodo,
+    setError,
+  } = useTodoStore();
+
+  useEffect(() => {
+    fetchTodos();
+  }, [fetchTodos]);
+
+  const handleAddTodo = async (title: string, content?: string) => {
+    await addTodo(title, content);
   };
 
-  const toggleComplete = (id: number) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
+  const handleToggleComplete = async (id: string) => {
+    await toggleTodo(id);
   };
 
-  const deleteTodo = (id: number) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
-    if (editingTodo && editingTodo.id === id) {
-      setEditingTodo(null);
-      setEditText("");
-    }
-  };
-
-  const startEdit = (todo: Todo) => {
+  const handleStartEdit = (todo: Todo) => {
     setEditingTodo(todo);
-    setEditText(todo.text);
   };
 
-  const saveEdit = () => {
-    if (!editingTodo || editText.trim() === "") return;
-    setTodos(
-      todos.map((todo) =>
-        todo.id === editingTodo.id
-          ? { ...todo, text: editText, createdAt: new Date().toISOString() }
-          : todo
-      )
+  const handleUpdateTodo = async (
+    id: string,
+    title: string,
+    content?: string
+  ) => {
+    await updateTodo(id, { title, content });
+    setEditingTodo(null);
+  };
+
+  const handleDeleteTodo = async (id: string) => {
+    await deleteTodo(id);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingTodo(null);
+  };
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-white">
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-2xl mx-auto">
+            <div className="bg-red-500/20 border border-red-500 rounded-lg p-4 mb-6">
+              <h2 className="text-xl font-bold text-red-400 mb-2">Error</h2>
+              <p className="text-red-300">{error}</p>
+              <button
+                onClick={() => setError(null)}
+                className="mt-3 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-white transition-colors"
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     );
-    setEditingTodo(null);
-    setEditText("");
-  };
-
-  const cancelEdit = () => {
-    setEditingTodo(null);
-    setEditText("");
-  };
+  }
 
   return (
-    <div className="bg-blue-50 text-blue-900 min-h-screen p-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-white">
       <Head>
         <title>Todo App</title>
         <meta name="description" content="Simple Todo App" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="max-w-2xl mx-auto">
-        <h1 className="text-center text-blue-500 text-3xl font-bold mb-8">
-          My Todos
-        </h1>
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-2xl mx-auto">
+          <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+            Todo App
+          </h1>
 
-        <TodoForm
-          newTodo={newTodo}
-          setNewTodo={setNewTodo}
-          onAddTodo={addTodo}
-        />
+          <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-6 mb-6">
+            <TodoForm onAddTodo={handleAddTodo} />
+          </div>
 
-        {editingTodo && (
-          <EditTodoForm
-            editingTodo={editingTodo}
-            editText={editText}
-            setEditText={setEditText}
-            onSaveEdit={saveEdit}
-            onCancelEdit={cancelEdit}
-          />
-        )}
+          {editingTodo && (
+            <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-6 mb-6">
+              <EditTodoForm
+                todo={editingTodo}
+                onUpdateTodo={handleUpdateTodo}
+                onCancelEdit={handleCancelEdit}
+              />
+            </div>
+          )}
 
-        <TodoList
-          todos={todos}
-          onToggleComplete={toggleComplete}
-          onStartEdit={startEdit}
-          onDeleteTodo={deleteTodo}
-        />
-      </main>
+          <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-6">
+            {isLoading ? (
+              <div className="text-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400 mx-auto"></div>
+                <p className="mt-2 text-gray-400">Loading todos...</p>
+              </div>
+            ) : (
+              <TodoList
+                todos={todos}
+                onToggleComplete={handleToggleComplete}
+                onStartEdit={handleStartEdit}
+                onDeleteTodo={handleDeleteTodo}
+              />
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

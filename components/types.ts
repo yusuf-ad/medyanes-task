@@ -1,6 +1,8 @@
 export interface Todo {
-  id: number;
-  text: string;
+  id: string;
+  title: string;
+  content?: string;
   completed: boolean;
-  createdAt: string; // ISO tarih formatında eklenme zamanı
+  createdAt: string;
+  updatedAt?: string;
 }
