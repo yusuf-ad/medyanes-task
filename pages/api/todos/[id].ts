@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import type { NextApiRequest, NextApiResponse } from "next";
 import {
   getDataByUnique,
@@ -27,7 +29,7 @@ export default async function handler(
           return res.status(404).json({ error: "Todo not found" });
         }
         return res.status(200).json(todo);
-      } catch (error) {
+      } catch {
         return res.status(500).json({ error: "Failed to fetch todo" });
       }
 
@@ -51,7 +53,7 @@ export default async function handler(
         }
 
         return res.status(200).json(updatedTodo);
-      } catch (error) {
+      } catch {
         return res.status(500).json({ error: "Failed to update todo" });
       }
 
@@ -64,7 +66,7 @@ export default async function handler(
         }
 
         return res.status(200).json({ message: "Todo deleted successfully" });
-      } catch (error) {
+      } catch {
         return res.status(500).json({ error: "Failed to delete todo" });
       }
 

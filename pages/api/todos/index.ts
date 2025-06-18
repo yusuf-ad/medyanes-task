@@ -15,7 +15,7 @@ export default async function handler(
           return res.status(500).json({ error: todos.error });
         }
         return res.status(200).json(todos);
-      } catch (error) {
+      } catch {
         return res.status(500).json({ error: "Failed to fetch todos" });
       }
 
@@ -38,7 +38,7 @@ export default async function handler(
         }
 
         return res.status(201).json(newTodo);
-      } catch (error) {
+      } catch {
         return res.status(500).json({ error: "Failed to create todo" });
       }
 
