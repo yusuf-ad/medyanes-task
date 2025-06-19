@@ -1,7 +1,5 @@
 "use client";
 
-import { useTodoStore } from "@/store/todoStore";
-import { useEffect, useState } from "react";
 import TodoItem from "./TodoItem";
 import { Todo } from "./types";
 
