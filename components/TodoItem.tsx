@@ -1,4 +1,6 @@
 import { Todo } from "./types";
+import { useTodoStore } from "@/store/todoStore";
+import { Loader2 } from "lucide-react";
 
 interface TodoItemProps {
   todo: Todo;
@@ -13,6 +15,9 @@ export default function TodoItem({
   onStartEdit,
   onDeleteTodo,
 }: TodoItemProps) {
+  const deletingTodoIds = useTodoStore((state) => state.deletingTodoIds);
+  const isDeleting = deletingTodoIds.includes(todo.id);
+
   return (
     <li
       className={`group p-4 bg-slate-700/30 border border-slate-600 rounded-lg mb-3 hover:bg-slate-700/50 transition-all duration-200 ${
@@ -89,9 +94,14 @@ export default function TodoItem({
           </button>
           <button
             onClick={() => onDeleteTodo(todo.id)}
-            className="px-3 py-1.5 bg-red-500 text-white rounded-md text-sm font-medium hover:bg-red-600 transition-colors"
+            disabled={isDeleting}
+            className="w-[71px] px-3 py-1.5 bg-red-500 text-white rounded-md text-sm font-medium hover:bg-red-600 transition-colors flex items-center justify-center"
           >
-            Delete
+            {isDeleting ? (
+              <Loader2 className="animate-spin" size={20} />
+            ) : (
+              "Delete"
+            )}
           </button>
         </div>
       </div>

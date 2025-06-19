@@ -6,6 +6,7 @@ interface TodoStore {
   todos: Todo[];
   isLoading: boolean;
   error: string | null;
+  deletingTodoIds: string[];
 
   // Actions
   fetchTodos: () => Promise<void>;
@@ -20,6 +21,7 @@ export const useTodoStore = create<TodoStore>((set, get) => ({
   todos: [],
   isLoading: false,
   error: null,
+  deletingTodoIds: [],
 
   fetchTodos: async () => {
     set({ isLoading: true, error: null });
@@ -99,6 +101,10 @@ export const useTodoStore = create<TodoStore>((set, get) => ({
   },
 
   deleteTodo: async (id: string) => {
+    const { deletingTodoIds } = get();
+    if (deletingTodoIds.includes(id)) return;
+
+    set((state) => ({ deletingTodoIds: [...state.deletingTodoIds, id] }));
     try {
       const data = await postAPI(`/api/todos/${id}`, {}, "DELETE");
       if (data?.error) {
@@ -111,6 +117,10 @@ export const useTodoStore = create<TodoStore>((set, get) => ({
       set({
         error: error instanceof Error ? error.message : "Failed to delete todo",
       });
+    } finally {
+      set((state) => ({
+        deletingTodoIds: state.deletingTodoIds.filter((dId) => dId !== id),
+      }));
     }
   },
 

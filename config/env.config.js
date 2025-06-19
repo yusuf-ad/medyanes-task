@@ -14,7 +14,7 @@ export const ENV_CONFIG = {
   // Default URLs for different environments
   DEFAULTS: {
     development: "http://localhost:3000",
-    production: "https://medyanes-task-liart.vercel.app/", // Production URL'inizi buraya ekleyin
+    production: "https://medyanes-task-liart.vercel.app", // Production URL'inizi buraya ekleyin
   },
 };
 
