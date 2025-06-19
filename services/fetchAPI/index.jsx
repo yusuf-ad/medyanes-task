@@ -1,5 +1,4 @@
-import { getBaseURL } from "@/config/env.config";
-
+// Öğrenci (kayıt) işlemleri için kullanılan servis
 const postAPI = async (
   URL,
   body,
@@ -7,17 +6,10 @@ const postAPI = async (
   headers = { "Content-Type": "application/json" }
 ) => {
   try {
-    if (!URL) {
+    if (!process.env.NEXT_PUBLIC_API_URL || !URL) {
       throw new Error("URL bulunamadı!");
     }
-
-    // Base URL'i environment variable'dan al
-    const baseURL = getBaseURL();
-    const fullURL = URL.startsWith("http") ? URL : `${baseURL}${URL}`;
-
-    console.log(`API Call: ${method} ${fullURL}`); // Debug için
-
-    const data = await fetch(fullURL, {
+    const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL + URL}`, {
       method: method,
       headers: headers,
       body: JSON.stringify(body),
@@ -41,37 +33,27 @@ const postAPI = async (
   }
 };
 
+// Öğrenci (kayıt) işlemleri için kullanılan servis
 const getAPI = async (
   URL,
   headers = { "Content-Type": "application/json" }
 ) => {
-  try {
-    // Base URL'i environment variable'dan al
-    const baseURL = getBaseURL();
-    const fullURL = URL.startsWith("http") ? URL : `${baseURL}${URL}`;
-
-    console.log(`API Call: GET ${fullURL}`); // Debug için
-
-    const data = await fetch(fullURL, {
-      method: "GET",
-      headers: headers,
-      cache: "no-store",
+  const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL + URL}`, {
+    method: "GET",
+    headers: headers,
+    cache: "no-store",
+  })
+    .then((res) => {
+      if (res.redirected) {
+        // bazı yerlerde window'u bulamıyor kontrol et
+        //return window.location.href = res.url;
+      } else {
+        return res.json();
+      }
     })
-      .then((res) => {
-        if (res.redirected) {
-          // bazı yerlerde window'u bulamıyor kontrol et
-          //return window.location.href = res.url;
-        } else {
-          return res.json();
-        }
-      })
-      .catch((err) => console.log(err));
+    .catch((err) => console.log(err));
 
-    return data;
-  } catch (err) {
-    console.error(`GET API request failed for ${URL}:`, err);
-    throw err;
-  }
+  return data;
 };
 
 export { postAPI, getAPI };
