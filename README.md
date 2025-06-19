@@ -42,7 +42,6 @@ npm install
 
 ```env
 DATABASE_URL="mongodb+srv://username:password@cluster.mongodb.net/todoapp?retryWrites=true&w=majority"
-NEXT_PUBLIC_API_URL="http://localhost:3000"
 ```
 
 ### 4. Prisma setup
