@@ -5,9 +5,18 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  // Add CORS headers
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
   const { method } = req;
 
   switch (method) {
+    case "OPTIONS":
+      // Handle preflight request
+      return res.status(200).end();
+
     case "GET":
       try {
         const todos = await getAllData("todo");
@@ -43,7 +52,7 @@ export default async function handler(
       }
 
     default:
-      res.setHeader("Allow", ["GET", "POST"]);
+      res.setHeader("Allow", ["GET", "POST", "OPTIONS"]);
       return res.status(405).end(`Method ${method} Not Allowed`);
   }
 }

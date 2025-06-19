@@ -11,8 +11,18 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  // Add CORS headers
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, PUT, DELETE, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
   const { method, query } = req;
   const { id } = query;
+
+  // Handle preflight request
+  if (method === "OPTIONS") {
+    return res.status(200).end();
+  }
 
   if (!id || typeof id !== "string") {
     return res.status(400).json({ error: "Todo ID is required" });
@@ -71,7 +81,7 @@ export default async function handler(
       }
 
     default:
-      res.setHeader("Allow", ["GET", "PUT", "DELETE"]);
+      res.setHeader("Allow", ["GET", "PUT", "DELETE", "OPTIONS"]);
       return res.status(405).end(`Method ${method} Not Allowed`);
   }
 }
