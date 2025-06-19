@@ -8,7 +8,12 @@ const postAPI = async (
     if (!URL) {
       throw new Error("URL bulunamadı!");
     }
-    const data = await fetch(URL, {
+
+    // Base URL'i environment variable'dan al
+    const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "";
+    const fullURL = URL.startsWith("http") ? URL : `${baseURL}${URL}`;
+
+    const data = await fetch(fullURL, {
       method: method,
       headers: headers,
       body: JSON.stringify(body),
@@ -36,7 +41,11 @@ const getAPI = async (
   URL,
   headers = { "Content-Type": "application/json" }
 ) => {
-  const data = await fetch(URL, {
+  // Base URL'i environment variable'dan al
+  const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "";
+  const fullURL = URL.startsWith("http") ? URL : `${baseURL}${URL}`;
+
+  const data = await fetch(fullURL, {
     method: "GET",
     headers: headers,
     cache: "no-store",
