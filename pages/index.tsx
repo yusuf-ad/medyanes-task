@@ -26,15 +26,27 @@ export default function Home() {
   }, [fetchTodos]);
 
   const handleAddTodo = async (title: string, content?: string) => {
-    await addTodo(title, content);
+    try {
+      await addTodo(title, content);
+    } catch (error) {
+      console.log("Error adding todo:", error);
+    }
   };
 
   const handleToggleComplete = async (id: string) => {
-    await toggleTodo(id);
+    try {
+      await toggleTodo(id);
+    } catch (error) {
+      console.log("Error toggling todo:", error);
+    }
   };
 
   const handleStartEdit = (todo: Todo) => {
-    setEditingTodo(todo);
+    try {
+      setEditingTodo(todo);
+    } catch (error) {
+      console.log("Error starting edit:", error);
+    }
   };
 
   const handleUpdateTodo = async (
@@ -42,12 +54,20 @@ export default function Home() {
     title: string,
     content?: string
   ) => {
-    await updateTodo(id, { title, content });
+    try {
+      await updateTodo(id, { title, content });
+    } catch (error) {
+      console.log("Error updating todo:", error);
+    }
     setEditingTodo(null);
   };
 
   const handleDeleteTodo = async (id: string) => {
-    await deleteTodo(id);
+    try {
+      await deleteTodo(id);
+    } catch (error) {
+      console.log("Error deleting todo:", error);
+    }
   };
 
   const handleCancelEdit = () => {
