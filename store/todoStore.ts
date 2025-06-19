@@ -32,6 +32,8 @@ export const useTodoStore = create<TodoStore>((set, get) => ({
       }
       set({ todos: data || [], isLoading: false });
     } catch (error) {
+      console.log("Error fetching todos:", error);
+
       set({
         error: error instanceof Error ? error.message : "Failed to fetch todos",
         isLoading: false,
@@ -51,6 +53,8 @@ export const useTodoStore = create<TodoStore>((set, get) => ({
         isLoading: false,
       }));
     } catch (error) {
+      console.log("Error adding todo:", error);
+
       set({
         error: error instanceof Error ? error.message : "Failed to add todo",
         isLoading: false,
@@ -78,6 +82,8 @@ export const useTodoStore = create<TodoStore>((set, get) => ({
         ),
       }));
     } catch (error) {
+      console.log("Error toggling todo:", error);
+
       set({
         error: error instanceof Error ? error.message : "Failed to toggle todo",
       });
@@ -94,6 +100,8 @@ export const useTodoStore = create<TodoStore>((set, get) => ({
         todos: state.todos.map((t) => (t.id === id ? { ...t, ...updates } : t)),
       }));
     } catch (error) {
+      console.log("Error updating todo:", error);
+
       set({
         error: error instanceof Error ? error.message : "Failed to update todo",
       });
@@ -114,6 +122,8 @@ export const useTodoStore = create<TodoStore>((set, get) => ({
         todos: state.todos.filter((t) => t.id !== id),
       }));
     } catch (error) {
+      console.log("Error deleting todo:", error);
+
       set({
         error: error instanceof Error ? error.message : "Failed to delete todo",
       });
