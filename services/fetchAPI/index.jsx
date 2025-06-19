@@ -1,3 +1,5 @@
+import { getBaseURL } from "@/config/env.config";
+
 const postAPI = async (
   URL,
   body,
@@ -10,8 +12,10 @@ const postAPI = async (
     }
 
     // Base URL'i environment variable'dan al
-    const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "";
+    const baseURL = getBaseURL();
     const fullURL = URL.startsWith("http") ? URL : `${baseURL}${URL}`;
+
+    console.log(`API Call: ${method} ${fullURL}`); // Debug için
 
     const data = await fetch(fullURL, {
       method: method,
@@ -41,26 +45,33 @@ const getAPI = async (
   URL,
   headers = { "Content-Type": "application/json" }
 ) => {
-  // Base URL'i environment variable'dan al
-  const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "";
-  const fullURL = URL.startsWith("http") ? URL : `${baseURL}${URL}`;
+  try {
+    // Base URL'i environment variable'dan al
+    const baseURL = getBaseURL();
+    const fullURL = URL.startsWith("http") ? URL : `${baseURL}${URL}`;
 
-  const data = await fetch(fullURL, {
-    method: "GET",
-    headers: headers,
-    cache: "no-store",
-  })
-    .then((res) => {
-      if (res.redirected) {
-        // bazı yerlerde window'u bulamıyor kontrol et
-        //return window.location.href = res.url;
-      } else {
-        return res.json();
-      }
+    console.log(`API Call: GET ${fullURL}`); // Debug için
+
+    const data = await fetch(fullURL, {
+      method: "GET",
+      headers: headers,
+      cache: "no-store",
     })
-    .catch((err) => console.log(err));
+      .then((res) => {
+        if (res.redirected) {
+          // bazı yerlerde window'u bulamıyor kontrol et
+          //return window.location.href = res.url;
+        } else {
+          return res.json();
+        }
+      })
+      .catch((err) => console.log(err));
 
-  return data;
+    return data;
+  } catch (err) {
+    console.error(`GET API request failed for ${URL}:`, err);
+    throw err;
+  }
 };
 
 export { postAPI, getAPI };
