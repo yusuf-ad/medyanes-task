@@ -1,4 +1,7 @@
+"use client";
+
 import { useState } from "react";
+import { useTodoStore } from "@/store/todoStore";
 import { Todo } from "./types";
 
 interface EditTodoFormProps {

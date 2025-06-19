@@ -1,3 +1,5 @@
+"use client";
+
 import { Todo } from "./types";
 import { useTodoStore } from "@/store/todoStore";
 import { Loader2 } from "lucide-react";

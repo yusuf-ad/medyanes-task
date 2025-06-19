@@ -1,3 +1,6 @@
+"use client";
+
+import { useTodoStore } from "@/store/todoStore";
 import { useState } from "react";
 
 interface TodoFormProps {
